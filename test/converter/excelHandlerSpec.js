@@ -389,21 +389,27 @@ const createDecisionTables = () => {
     {
       id: '0',
       name: 'dt0',
+      inputTypes: [],
       inputs: [],
+      outputTypes: [],
       outputs: [],
       rules: []
     },
     {
       id: '1',
       name: 'dt1',
+      inputTypes: [],
       inputs: [],
+      outputTypes: [],
       outputs: [],
       rules: []
     },
     {
       id: '2',
       name: 'dt2',
+      inputTypes: [],
       inputs: [],
+      outputTypes: [],
       outputs: [],
       rules: []
     }

@@ -25,7 +25,7 @@ export const parseDmnContent = ({
   const excelSheet = xlsx.parse(buffer, { type: 'buffer' });
 
   return excelSheet.map((sheet, idx) => {
-    const header = sheet.data[0];
+    let rowIdx = 0;
 
     const sheetOptions = sheetsOptions[idx] || {};
     let {
@@ -36,10 +36,21 @@ export const parseDmnContent = ({
       hasAnnotationColumn
     } = sheetOptions;
 
+    let typeRefs = [];
+    const hasTypeInfo = sheet.data[rowIdx].every(value => value.includes(','));
+    if (hasTypeInfo) {
+      const typesHeader = sheet.data[rowIdx++];
+      typeRefs = typesHeader.map((value) => value.split(',')[1]);
+    }
+    const header = sheet.data[rowIdx];
+    const firstDataRow = rowIdx + 1;
+
     const rawInputData = header.slice(0, header.length - amountOutputs);
     const rawOutputData = header.slice(header.length - amountOutputs);
-    const safeRuleRows = validateRows(sheet.data.slice(1));
-    const typeRefs = getTypeRefs(safeRuleRows[0]);
+    const safeRuleRows = validateRows(sheet.data.slice(firstDataRow));
+    if (!hasTypeInfo) {
+      typeRefs = getTypeRefs(safeRuleRows[0]);
+    }
 
     if (!tableName) {
       tableName = sheet.name;
@@ -47,6 +58,7 @@ export const parseDmnContent = ({
 
     return dmnContents({
       name: tableName,
+      hasTypeInfo,
       hitPolicy,
       aggregation,
       inputs: getInputs(rawInputData, typeRefs),
@@ -60,9 +72,13 @@ export const parseDmnContent = ({
 export const buildXlsx = (decisionTables = []) => {
   const dataSheets = decisionTables.map(decisionTable => {
 
+    const inputTypes = decisionTable.inputTypes.map((type) => 'Input' + (type ? ',' + type : ''));
+    const outputTypes = decisionTable.outputTypes.map((type) => 'Output' + (type ? ',' + type : ''));
+
     return {
       name: decisionTable.name,
       data: [
+        [ ...inputTypes, ...outputTypes ],
         [ ...decisionTable.inputs, ...decisionTable.outputs ],
         ...decisionTable.rules
       ]

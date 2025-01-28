@@ -13,7 +13,9 @@ export const buildJsonFromXML = async ({ xml }) => {
 
     return {
       id: d.id,
+      inputTypes: decisionLogic.get('input').map(buildInputTypes),
       inputs: decisionLogic.get('input').map(buildParseableInput),
+      outputTypes: decisionLogic.get('output').map(buildOutputTypes),
       outputs: decisionLogic.get('output').map(buildParseableOutput),
       rules: decisionLogic.get('rule').map(buildParseableRule),
       name: d.get('name')
@@ -36,6 +38,11 @@ const getAllDecisionTables = (definitions) => {
   return decisions.filter((dt) => dt.get('decisionLogic').$type === 'dmn:DecisionTable');
 };
 
+const buildInputTypes = (input) => {
+  const expression = input.get('inputExpression');
+  return expression ? expression.get('typeRef') : '';
+};
+
 const buildParseableInput = (input) => {
   const expression = input.get('inputExpression');
 
@@ -44,6 +51,10 @@ const buildParseableInput = (input) => {
   }
 
   return input.get('label');
+};
+
+const buildOutputTypes = (output) => {
+  return output.get('typeRef');
 };
 
 const buildParseableOutput = (output) => {
