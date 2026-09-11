@@ -25,7 +25,9 @@ describe('dmnJsonGenerator', () => {
       expect(decisionTables).to.deep.equal([
         {
           id: 'dish-decision',
+          inputTypes: [ 'string', 'integer' ],
           inputs: [ 'Season', 'How many guests' ],
+          outputTypes: [ 'string' ],
           outputs: [ 'Dish' ],
           rules: [
             [ '"Winter"', '<= 8', '"Spareribs"' ],
@@ -39,7 +41,9 @@ describe('dmnJsonGenerator', () => {
         },
         {
           id: 'season',
+          inputTypes: [ 'integer' ],
           inputs: [ 'Weather in Celsius' ],
+          outputTypes: [ 'string' ],
           outputs: [ 'season' ],
           rules: [
             [ '>30', '"Summer"' ],
@@ -50,7 +54,9 @@ describe('dmnJsonGenerator', () => {
         },
         {
           id: 'guestCount',
+          inputTypes: [ 'string' ],
           inputs: [ 'Type of day' ],
+          outputTypes: [ 'integer' ],
           outputs: [ 'Guest count' ],
           rules: [
             [ '"Weekday"', '4' ],

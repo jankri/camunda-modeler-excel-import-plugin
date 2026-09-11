@@ -24,9 +24,9 @@ export default function ImportOverlay(props) {
 
   // set defaults
   useEffect(() => {
-    const sheets = rawSheets.map(() => {
+    const sheets = rawSheets.map((rawSheet) => {
       return {
-        amountOutputs: 1,
+        amountOutputs: rawSheet.amountOutputs || 1,
         hitPolicy: 'Unique'
       };
     });
@@ -144,6 +144,7 @@ export default function ImportOverlay(props) {
                                 onChange={ event => updateSheet(idx, 'tableName', event.target.value) } />
                             </div>
 
+                            { !rawSheet.hasTypeInfo &&
                             <div className="form-group">
                               <label>Amount output columns</label>
                               <input
@@ -155,6 +156,7 @@ export default function ImportOverlay(props) {
                                 onChange={ event => updateSheet(idx, 'amountOutputs', event.target.value) }
                               />
                             </div>
+                            }
 
                             <div className="form-group">
                               <label>Has annotation column?</label>
