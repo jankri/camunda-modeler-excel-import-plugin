@@ -1,20 +1,20 @@
 import xlsx from 'node-xlsx';
 
-import entry from './domain/entry';
+import entry from './domain/entry.js';
 
-import input from './domain/input';
+import input from './domain/input.js';
 
-import inputExpression from './domain/inputExpression';
+import inputExpression from './domain/inputExpression.js';
 
-import output from './domain/output';
+import output from './domain/output.js';
 
-import rule from './domain/rule';
+import rule from './domain/rule.js';
 
-import dmnContents from './domain/dmnContents';
+import dmnContents from './domain/dmnContents.js';
 
 import {
   nextId
-} from './util';
+} from './util/index.js';
 
 // API //////////////////////////////
 

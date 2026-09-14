@@ -2,7 +2,7 @@ import builder from 'xmlbuilder';
 
 import {
   nextId
-} from './util';
+} from './util/index.js';
 
 const xmlns = 'https://www.omg.org/spec/DMN/20191111/MODEL/';
 
