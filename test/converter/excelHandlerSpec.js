@@ -196,8 +196,7 @@ describe('excelHandler', () => {
       // given
       const options = createOptions({
         sheet: {
-          amountOutputs: 2,
-          hasAnnotationColumn: true
+          amountOutputs: 2
         }
       });
 
@@ -243,7 +242,7 @@ describe('excelHandler', () => {
 
       const expectedRules = [
         {
-          description: 'accounting',
+          description: '',
           inputEntries: [
             { text: '<= 500' }
           ],
@@ -318,7 +317,6 @@ const createOptions = (overrides = {}) => {
         amountOutputs: 1,
         hitPolicy: 'UNIQUE',
         aggregation: undefined,
-        hasAnnotationColumn: false,
         ...overrides.sheet
       }
     ],

@@ -159,18 +159,6 @@ export default function ImportOverlay(props) {
                             }
 
                             <div className="form-group">
-                              <label>Has annotation column?</label>
-                              <input
-                                type="checkbox"
-                                id={ 'hasAnnotationColumn-' + idx }
-                                className="form-control"
-                                name={ 'hasAnnotationColumn-' + idx }
-                                value={ getSheet(idx, 'hasAnnotationColumn') }
-                                onChange={ event => updateSheet(idx, 'hasAnnotationColumn', event.target.checked) }
-                              />
-                            </div>
-
-                            <div className="form-group">
                               <label>Hit Policy</label>
                               <select
                                 id={ 'hitPolicy-' + idx }
