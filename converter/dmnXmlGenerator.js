@@ -161,11 +161,11 @@ const generateInputNodes = (inputs = []) => {
   return inputs.map(input => {
     return {
       '@id': input.id,
-      '@label': input.label,
+      '@label': input.label.trim(),
       inputExpression: {
         '@id': input.inputExpression.id,
         '@typeRef': input.inputExpression.typeRef,
-        text: input.inputExpression.text
+        text: input.inputExpression.text.trim()
       }
     };
   });
@@ -175,8 +175,8 @@ const generateOutputNodes = (outputs = []) => {
   return outputs.map(output => {
     return {
       '@id': output.id,
-      '@label': output.text,
-      '@name': output.name,
+      '@label': output.text.trim(),
+      '@name': output.name.trim(),
       '@typeRef': output.typeRef
     };
   });
