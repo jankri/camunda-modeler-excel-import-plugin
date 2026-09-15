@@ -27,7 +27,7 @@ export default function ImportOverlay(props) {
     const sheets = rawSheets.map((rawSheet) => {
       return {
         amountOutputs: rawSheet.amountOutputs || 1,
-        hitPolicy: 'Unique'
+        hitPolicy: rawSheet.hitPolicy || 'Unique',
       };
     });
 
@@ -120,7 +120,7 @@ export default function ImportOverlay(props) {
           <Section.Body>
             <form id="import-form" className="import-form" onSubmit={ handleSubmit }>
               {
-                rawSheets.map(function(rawSheet, idx) {
+                rawSheets.filter((rawSheet) => !rawSheet.hasMetadata).map(function(rawSheet, idx) {
                   return (
                     <Section key={ idx }>
 

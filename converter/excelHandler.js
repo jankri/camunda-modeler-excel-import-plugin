@@ -36,6 +36,14 @@ export const parseDmnContent = ({
     } = sheetOptions;
 
     let typeRefs = [];
+    const hasMetadata = sheet.data[rowIdx][0] === 'metadata';
+    if (hasMetadata) {
+      const metadata = JSON.parse(sheet.data[rowIdx][1]);
+      hitPolicy = metadata.hitPolicy;
+      aggregation = metadata.aggregation;
+      rowIdx++;
+    }
+
     const hasTypeInfo = sheet.data[rowIdx].every(value => value.includes(','));
     if (hasTypeInfo) {
       const typesHeader = sheet.data[rowIdx++];
@@ -58,6 +66,7 @@ export const parseDmnContent = ({
 
     return dmnContents({
       name: tableName,
+      hasMetadata,
       hasTypeInfo,
       hitPolicy,
       aggregation,
@@ -72,12 +81,18 @@ export const parseDmnContent = ({
 export const buildXlsx = (decisionTables = []) => {
   const dataSheets = decisionTables.map(decisionTable => {
 
+    const metadata = {
+      hitPolicy: decisionTable.hitPolicy,
+      aggregation: decisionTable.aggregation,
+    };
+
     const inputTypes = decisionTable.inputTypes.map((type) => 'Input' + (type ? ',' + type : ''));
     const outputTypes = decisionTable.outputTypes.map((type) => 'Output' + (type ? ',' + type : ''));
 
     return {
       name: decisionTable.name,
       data: [
+        [ 'metadata', JSON.stringify(metadata) ],
         [ ...inputTypes, ...outputTypes ],
         [ ...decisionTable.inputs, ...decisionTable.outputs ],
         ...decisionTable.rules

@@ -13,6 +13,8 @@ export const buildJsonFromXML = async ({ xml }) => {
 
     return {
       id: d.id,
+      hitPolicy: decisionLogic.hitPolicy,
+      aggregation: decisionLogic.aggregation,
       inputTypes: decisionLogic.get('input').map(buildInputTypes),
       inputs: decisionLogic.get('input').map(buildParseableInput),
       outputTypes: decisionLogic.get('output').map(buildOutputTypes),
