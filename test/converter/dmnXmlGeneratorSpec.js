@@ -138,6 +138,9 @@ const createDmnContents = (overrides = {}) => {
 
   const newSheet = {
     name: 'myTableName',
+    id: 'myId',
+    imports: [ '#aaa' ],
+    bounds: [ 301, 48, 180, 80 ],
     hitPolicy: 'UNIQUE',
     inputs: [
       { id: 'Input0', label: 'amount', inputExpression: { id: 'InputExpression0', text: 'amount', typeRef: 'string' } },

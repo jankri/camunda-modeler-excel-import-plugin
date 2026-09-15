@@ -26,9 +26,13 @@ const namespace = 'http://camunda.org/schema/1.0/dmn';
 export const buildXmlFromDmnContent = (dmnContents) => {
   let base = generateBaseNodes();
 
+  let edges = [];
+
   dmnContents.forEach(sheet => {
     const {
+      id,
       name,
+      links,
       rules,
       inputs,
       outputs,
@@ -56,13 +60,60 @@ export const buildXmlFromDmnContent = (dmnContents) => {
 
     // (2) add to definitions
     const decision = {
-      '@id': nextId('Decision_'),
+      '@id': id ? id : nextId('Decision_'),
       '@name': name,
       decisionTable
     };
 
-    base.ele({ decision });
+    let decisionElement = base.ele({ decision });
+
+    if (links) {
+      for (const link of links) {
+        const requiredDecision = {
+          '@href': link.href,
+        };
+        const id = nextId('InformationRequirement_');
+        const informationRequirement = {
+          '@id': id,
+          requiredDecision,
+        };
+        decisionElement.ele({ informationRequirement });
+
+        edges.push({ href: id, points: link.edges });
+      }
+    }
   });
+
+  let dmndi = base.ele('dmndi:DMNDI');
+  let dmnDiagram = dmndi.ele('dmndi:DMNDiagram');
+  dmnDiagram.att('id', nextId('DMNDiagram_'));
+
+  dmnContents.forEach(sheet => {
+    const {
+      id,
+      bounds,
+    } = sheet;
+
+    let shape = dmnDiagram.ele('dmndi:DMNShape');
+    shape.att('id', nextId('DMNShape_'));
+    shape.att('dmnElementRef', id);
+    let shapeBounds = shape.ele('dc:Bounds');
+    shapeBounds.att('x', bounds[0]);
+    shapeBounds.att('y', bounds[1]);
+    shapeBounds.att('width', bounds[2]);
+    shapeBounds.att('height', bounds[3]);
+  });
+
+  for (const edge of edges) {
+    let edgeElement = dmnDiagram.ele('dmndi:DMNEdge');
+    edgeElement.att('id', nextId('DMNEdge_'));
+    edgeElement.att('dmnElementRef', edge.href);
+    for (const point of edge.points) {
+      let pointElement = edgeElement.ele('di:waypoint');
+      pointElement.att('x', point.x);
+      pointElement.att('y', point.y);
+    }
+  }
 
   return base.end({ pretty: true });
 };

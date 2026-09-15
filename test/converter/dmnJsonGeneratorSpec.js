@@ -27,6 +27,27 @@ describe('dmnJsonGenerator', () => {
           id: 'dish-decision',
           hitPolicy: 'UNIQUE',
           aggregation: undefined,
+          bounds: [ 301, 48, 180, 80 ],
+          links: [
+            {
+              edges: [
+                { x: 480, y: 210 },
+                { x: 421, y: 148 },
+                { x: 421, y: 128 }
+              ],
+              href: '#guestCount',
+              id: 'InformationRequirement_1d56kg6',
+            },
+            {
+              edges: [
+                { x: 251, y: 210 },
+                { x: 361, y: 148 },
+                { x: 361, y: 128 }
+              ],
+              href: '#season',
+              id: 'InformationRequirement_11onl5b',
+            }
+          ],
           inputTypes: [ 'string', 'integer' ],
           inputs: [ 'Season', 'How many guests' ],
           outputTypes: [ 'string' ],
@@ -45,6 +66,8 @@ describe('dmnJsonGenerator', () => {
           id: 'season',
           hitPolicy: 'UNIQUE',
           aggregation: undefined,
+          bounds: [ 161, 210, 180, 80 ],
+          links: [],
           inputTypes: [ 'integer' ],
           inputs: [ 'Weather in Celsius' ],
           outputTypes: [ 'string' ],
@@ -60,6 +83,8 @@ describe('dmnJsonGenerator', () => {
           id: 'guestCount',
           hitPolicy: 'UNIQUE',
           aggregation: undefined,
+          bounds: [ 390, 210, 180, 80 ],
+          links: [],
           inputTypes: [ 'string' ],
           inputs: [ 'Type of day' ],
           outputTypes: [ 'integer' ],

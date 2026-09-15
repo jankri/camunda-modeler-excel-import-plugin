@@ -8,13 +8,39 @@ export const buildJsonFromXML = async ({ xml }) => {
 
   const decisionTables = getAllDecisionTables(definitions);
 
+  const dmnDI = definitions.get('dmnDI');
+  const diagrams = dmnDI.get('diagrams');
+  const diagramElements = diagrams.map((d) => d.get('diagramElements')).flat();
+
   return decisionTables.map(d => {
     const decisionLogic = d.get('decisionLogic');
+
+    const infoRequirements = d.get('informationRequirement');
+    let links = [];
+    if (infoRequirements) {
+      for (const infoRequirement of infoRequirements) {
+        if (!infoRequirement.requiredDecision) continue;
+
+        const diagramElement = diagramElements.filter((de) => de.get('dmnElementRef').get('id') === infoRequirement.id)[0];
+
+        const link = {
+          id: infoRequirement.id,
+          href: infoRequirement.requiredDecision.href,
+          edges: diagramElement.get('waypoint').map((wp) => { return { x: wp.x, y: wp.y }; }),
+        };
+        links.push(link);
+      }
+    }
+
+    const diagramElement = diagramElements.filter((de) => de.get('dmnElementRef').get('id') === d.id)[0];
+    const bounds = diagramElement.get('bounds');
 
     return {
       id: d.id,
       hitPolicy: decisionLogic.hitPolicy,
       aggregation: decisionLogic.aggregation,
+      links: links,
+      bounds: [ bounds.x, bounds.y, bounds.width, bounds.height ],
       inputTypes: decisionLogic.get('input').map(buildInputTypes),
       inputs: decisionLogic.get('input').map(buildParseableInput),
       outputTypes: decisionLogic.get('output').map(buildOutputTypes),

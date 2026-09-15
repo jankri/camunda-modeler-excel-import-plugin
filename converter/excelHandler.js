@@ -35,10 +35,16 @@ export const parseDmnContent = ({
       hitPolicy
     } = sheetOptions;
 
+    let id = null;
+    let bounds = null;
+    let links = [];
     let typeRefs = [];
     const hasMetadata = sheet.data[rowIdx][0] === 'metadata';
     if (hasMetadata) {
       const metadata = JSON.parse(sheet.data[rowIdx][1]);
+      links = metadata.links;
+      bounds = metadata.bounds;
+      id = metadata.id;
       hitPolicy = metadata.hitPolicy;
       aggregation = metadata.aggregation;
       rowIdx++;
@@ -65,9 +71,12 @@ export const parseDmnContent = ({
     }
 
     return dmnContents({
+      id,
       name: tableName,
       hasMetadata,
       hasTypeInfo,
+      links,
+      bounds,
       hitPolicy,
       aggregation,
       inputs: getInputs(rawInputData, typeRefs),
@@ -84,6 +93,9 @@ export const buildXlsx = (decisionTables = []) => {
     const metadata = {
       hitPolicy: decisionTable.hitPolicy,
       aggregation: decisionTable.aggregation,
+      links: decisionTable.links,
+      bounds: decisionTable.bounds,
+      id: decisionTable.id,
     };
 
     const inputTypes = decisionTable.inputTypes.map((type) => 'Input' + (type ? ',' + type : ''));
