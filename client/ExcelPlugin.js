@@ -124,6 +124,7 @@ export default class ExcelPlugin extends PureComponent {
 
   async handleFileImportSuccess(xml, isMulti = false) {
     const {
+      displayNotification,
       triggerAction,
       subscribe
     } = this.props;
@@ -156,6 +157,12 @@ export default class ExcelPlugin extends PureComponent {
     });
 
     tab = await triggerAction('create-dmn-diagram');
+    await triggerAction('save-as')
+      .then(tab => {
+        if (!tab) {
+          return displayNotification({ title: 'Failed to save' });
+        }
+      });
 
     // cancel subscription after tab is created
     hook.cancel();
