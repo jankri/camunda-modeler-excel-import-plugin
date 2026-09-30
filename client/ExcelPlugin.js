@@ -210,12 +210,6 @@ export default class ExcelPlugin extends PureComponent {
   }
 
   async importExcelSheet(options) {
-    const {
-      _getGlobal
-    } = this.props;
-
-    const fileSystem = _getGlobal('fileSystem');
-
     let {
       inputFile,
       sheets
@@ -234,14 +228,7 @@ export default class ExcelPlugin extends PureComponent {
       });
 
       // (1) get excel sheet contents
-      const excelSheet = await fileSystem.readFile(inputFile.path, {
-        encoding: false
-      });
-
-      const {
-        contents
-      } = excelSheet;
-
+      const contents = await inputFile.arrayBuffer();
       const isMulti = await isMultiSheet(contents);
 
       // (2) convert to DMN 1.3
@@ -275,20 +262,7 @@ export default class ExcelPlugin extends PureComponent {
   }
 
   async getSheets(file) {
-    const {
-      _getGlobal
-    } = this.props;
-
-    const fileSystem = _getGlobal('fileSystem');
-
-    const excelSheet = await fileSystem.readFile(file.path, {
-      encoding: false
-    });
-
-    const {
-      contents
-    } = excelSheet;
-
+    const contents = await file.arrayBuffer();
     const dmnContents = await parseDmn({ buffer: contents });
 
     return dmnContents;
